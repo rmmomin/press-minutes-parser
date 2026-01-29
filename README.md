@@ -4,7 +4,7 @@ An end-to-end pipeline to scrape FOMC (Federal Open Market Committee) meeting mi
 
 ## Overview
 
-This project downloads official Federal Reserve documents and tracks how often the Fed discusses immigration and productivity over time. The analysis covers all FOMC meetings from 2020-2025.
+This project downloads official Federal Reserve documents and tracks how often the Fed discusses immigration and productivity over time. The analysis covers all FOMC meetings from 2012-2026.
 
 ## Pipeline Steps
 
@@ -42,8 +42,8 @@ python src/create_visualization.py  # Step 3: Generate charts
 ## Output
 
 ### Data Files
-- `data/transcripts/` - FOMC press conference transcript PDFs (49 files)
-- `data/minutes/` - FOMC meeting minutes PDFs (48 files)
+- `data/transcripts/` - FOMC press conference transcript PDFs (87 files)
+- `data/minutes/` - FOMC meeting minutes PDFs (85 files)
 - `data/word_counts.csv` - Extracted word counts
 
 ### Visualizations
@@ -76,4 +76,4 @@ press-minutes-parser/
 
 ## Key Findings
 
-The analysis shows that both "immigration" and "productivity" were rarely mentioned in FOMC communications until late 2023, with a significant increase in discussion frequency throughout 2024-2025.
+The analysis shows that "productivity" has been a consistent topic in FOMC discussions since 2012, while "immigration" was rarely mentioned until late 2023, with a significant increase in discussion frequency throughout 2024-2025.
