@@ -7,11 +7,15 @@ from 2020-2025.
 """
 
 import os
+import re
 from pathlib import Path
 import requests
 
-# All FOMC meeting dates from 2020-2025 (YYYYMMDD format)
-MEETING_DATES = [
+# FOMC calendar page for dynamic date fetching
+CALENDAR_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+# Fallback FOMC meeting dates (used if scraping fails)
+FALLBACK_MEETING_DATES = [
     # 2020
     "20200129", "20200303", "20200315", "20200429", "20200610",
     "20200729", "20200916", "20201105", "20201216",
@@ -40,6 +44,42 @@ MINUTES_URL = "https://www.federalreserve.gov/monetarypolicy/files/fomcminutes{d
 BASE_DIR = Path(__file__).parent.parent
 TRANSCRIPTS_DIR = BASE_DIR / "data" / "transcripts"
 MINUTES_DIR = BASE_DIR / "data" / "minutes"
+
+
+def fetch_meeting_dates():
+    """Fetch FOMC meeting dates, combining fallback dates with scraped dates."""
+    # Start with fallback dates (ensures historical coverage)
+    all_dates = set(FALLBACK_MEETING_DATES)
+
+    try:
+        response = requests.get(CALENDAR_URL, timeout=30)
+        response.raise_for_status()
+
+        # Extract dates from document links
+        date_pattern = r'fomcminutes(\d{8})\.pdf'
+        scraped = set(re.findall(date_pattern, response.text))
+
+        # Also check transcript links for very recent meetings
+        transcript_pattern = r'FOMCpresconf(\d{8})\.pdf'
+        scraped.update(re.findall(transcript_pattern, response.text))
+
+        # Check press conference page links (handles both fomcpresconf and fomcpressconf)
+        pressconf_pattern = r'fomcpress?conf(\d{8})\.htm'
+        scraped.update(re.findall(pressconf_pattern, response.text))
+
+        if scraped:
+            new_dates = scraped - all_dates
+            if new_dates:
+                print(f"Found {len(new_dates)} new meeting dates: {sorted(new_dates)}")
+            all_dates.update(scraped)
+    except Exception as e:
+        print(f"Warning: Could not fetch calendar ({e}), using fallback dates only")
+
+    return sorted(all_dates)
+
+
+# Fetch meeting dates at module load (merges fallback + scraped)
+MEETING_DATES = fetch_meeting_dates()
 
 
 def download_file(url, output_path):

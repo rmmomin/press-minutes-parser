@@ -48,6 +48,9 @@ def load_data():
     }
 
 
+FOOTNOTE = "Note: As of January 29, 2026, FOMC minutes for the January 27-28, 2026 meeting are not yet available."
+
+
 def draw_bar_chart(ax, data):
     """Draw grouped stacked bar chart on given axes."""
     sorted_dates = data['dates']
@@ -142,7 +145,8 @@ def create_visualization():
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(18, 12))
     draw_bar_chart(ax1, data)
     draw_line_chart(ax2, data)
-    plt.tight_layout()
+    fig.text(0.5, 0.01, FOOTNOTE, ha='center', fontsize=9, style='italic')
+    plt.tight_layout(rect=[0, 0.03, 1, 1])
     combined_path = OUTPUT_DIR / "fomc_word_trends.png"
     plt.savefig(combined_path, dpi=150, bbox_inches='tight')
     plt.close()
@@ -151,7 +155,8 @@ def create_visualization():
     # 2. Bar chart only
     fig, ax = plt.subplots(figsize=(18, 8))
     draw_bar_chart(ax, data)
-    plt.tight_layout()
+    fig.text(0.5, 0.01, FOOTNOTE, ha='center', fontsize=9, style='italic')
+    plt.tight_layout(rect=[0, 0.03, 1, 1])
     bars_path = OUTPUT_DIR / "fomc_word_trends_bars.png"
     plt.savefig(bars_path, dpi=150, bbox_inches='tight')
     plt.close()
@@ -160,7 +165,8 @@ def create_visualization():
     # 3. Line chart only
     fig, ax = plt.subplots(figsize=(18, 6))
     draw_line_chart(ax, data)
-    plt.tight_layout()
+    fig.text(0.5, 0.01, FOOTNOTE, ha='center', fontsize=9, style='italic')
+    plt.tight_layout(rect=[0, 0.04, 1, 1])
     lines_path = OUTPUT_DIR / "fomc_word_trends_lines.png"
     plt.savefig(lines_path, dpi=150, bbox_inches='tight')
     plt.close()
