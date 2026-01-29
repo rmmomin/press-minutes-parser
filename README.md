@@ -4,7 +4,7 @@ An end-to-end pipeline to scrape FOMC (Federal Open Market Committee) meeting mi
 
 ## Overview
 
-This project downloads official Federal Reserve documents and tracks how often the Fed discusses immigration and productivity over time. The analysis covers all FOMC meetings from 2012-2026.
+This project downloads official Federal Reserve documents and tracks how often the Fed discusses immigration and productivity over time. The analysis covers all FOMC meetings from 2012-2025.
 
 ## Pipeline Steps
 
@@ -42,7 +42,7 @@ python src/create_visualization.py  # Step 3: Generate charts
 ## Output
 
 ### Data Files
-- `data/transcripts/` - FOMC press conference transcript PDFs (87 files)
+- `data/transcripts/` - FOMC press conference transcript PDFs (86 files)
 - `data/minutes/` - FOMC meeting minutes PDFs (85 files)
 - `data/word_counts.csv` - Extracted word counts
 
