@@ -124,6 +124,14 @@ def draw_line_chart(ax, data):
     ax.set_axisbelow(True)
 
 
+FOOTNOTE = "Note: Jan 28, 2026 data is incomplete — FOMC minutes have not yet been released."
+
+
+def add_footnote(fig):
+    """Add a footnote to the bottom of a figure."""
+    fig.text(0.5, -0.02, FOOTNOTE, ha='center', fontsize=9, fontstyle='italic', color='#555555')
+
+
 def create_visualization():
     """Create all three visualization outputs."""
 
@@ -143,6 +151,7 @@ def create_visualization():
     draw_bar_chart(ax1, data)
     draw_line_chart(ax2, data)
     plt.tight_layout()
+    add_footnote(fig)
     combined_path = OUTPUT_DIR / "fomc_word_trends.png"
     plt.savefig(combined_path, dpi=150, bbox_inches='tight')
     plt.close()
@@ -152,6 +161,7 @@ def create_visualization():
     fig, ax = plt.subplots(figsize=(18, 8))
     draw_bar_chart(ax, data)
     plt.tight_layout()
+    add_footnote(fig)
     bars_path = OUTPUT_DIR / "fomc_word_trends_bars.png"
     plt.savefig(bars_path, dpi=150, bbox_inches='tight')
     plt.close()
@@ -161,6 +171,7 @@ def create_visualization():
     fig, ax = plt.subplots(figsize=(18, 6))
     draw_line_chart(ax, data)
     plt.tight_layout()
+    add_footnote(fig)
     lines_path = OUTPUT_DIR / "fomc_word_trends_lines.png"
     plt.savefig(lines_path, dpi=150, bbox_inches='tight')
     plt.close()
