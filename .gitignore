@@ -17,6 +17,10 @@ venv/
 env/
 .venv/
 
+# Local secrets
+.env/
+.env
+
 # IDE
 .idea/
 .vscode/
