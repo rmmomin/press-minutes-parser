@@ -29,6 +29,7 @@ def load_data():
         'productivity_transcript': 0,
         'productivity_minutes': 0,
     })
+    minutes_dates = set()
 
     with open(INPUT_FILE, 'r') as f:
         reader = csv.DictReader(f)
@@ -36,8 +37,11 @@ def load_data():
             date = row['meeting_date']
             key = f"{row['word']}_{row['document_type']}"
             data[date][key] = int(row['count'])
+            if row['document_type'] == 'minutes':
+                minutes_dates.add(date)
 
     sorted_dates = sorted(data.keys())
+    latest_date = sorted_dates[-1] if sorted_dates else None
 
     return {
         'dates': sorted_dates,
@@ -45,6 +49,8 @@ def load_data():
         'immigration_minutes': [data[d]['immigration_minutes'] for d in sorted_dates],
         'productivity_transcript': [data[d]['productivity_transcript'] for d in sorted_dates],
         'productivity_minutes': [data[d]['productivity_minutes'] for d in sorted_dates],
+        'latest_date': latest_date,
+        'latest_missing_minutes': bool(latest_date and latest_date not in minutes_dates),
     }
 
 
@@ -124,12 +130,28 @@ def draw_line_chart(ax, data):
     ax.set_axisbelow(True)
 
 
-FOOTNOTE = "Note: Jan 28, 2026 data is incomplete — FOMC minutes have not yet been released."
+def format_human_date(date_str):
+    """Convert YYYY-MM-DD to 'Mon D, YYYY'."""
+    year, month, day = date_str.split('-')
+    month_names = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ]
+    return f"{month_names[int(month) - 1]} {int(day)}, {year}"
 
 
-def add_footnote(fig):
-    """Add a footnote to the bottom of a figure."""
-    fig.text(0.5, -0.02, FOOTNOTE, ha='center', fontsize=9, fontstyle='italic', color='#555555')
+def build_footnote(data):
+    """Return a context-aware footnote when latest meeting minutes are unavailable."""
+    if data['latest_missing_minutes']:
+        latest = format_human_date(data['latest_date'])
+        return f"Note: {latest} data is incomplete - FOMC minutes have not yet been released."
+    return None
+
+
+def add_footnote(fig, footnote):
+    """Add a footnote to the bottom of a figure if needed."""
+    if footnote:
+        fig.text(0.5, -0.02, footnote, ha='center', fontsize=9, fontstyle='italic', color='#555555')
 
 
 def create_visualization():
@@ -144,6 +166,7 @@ def create_visualization():
 
     # Load data
     data = load_data()
+    footnote = build_footnote(data)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     # 1. Combined chart (bar + line)
@@ -151,7 +174,7 @@ def create_visualization():
     draw_bar_chart(ax1, data)
     draw_line_chart(ax2, data)
     plt.tight_layout()
-    add_footnote(fig)
+    add_footnote(fig, footnote)
     combined_path = OUTPUT_DIR / "fomc_word_trends.png"
     plt.savefig(combined_path, dpi=150, bbox_inches='tight')
     plt.close()
@@ -161,7 +184,7 @@ def create_visualization():
     fig, ax = plt.subplots(figsize=(18, 8))
     draw_bar_chart(ax, data)
     plt.tight_layout()
-    add_footnote(fig)
+    add_footnote(fig, footnote)
     bars_path = OUTPUT_DIR / "fomc_word_trends_bars.png"
     plt.savefig(bars_path, dpi=150, bbox_inches='tight')
     plt.close()
@@ -171,7 +194,7 @@ def create_visualization():
     fig, ax = plt.subplots(figsize=(18, 6))
     draw_line_chart(ax, data)
     plt.tight_layout()
-    add_footnote(fig)
+    add_footnote(fig, footnote)
     lines_path = OUTPUT_DIR / "fomc_word_trends_lines.png"
     plt.savefig(lines_path, dpi=150, bbox_inches='tight')
     plt.close()

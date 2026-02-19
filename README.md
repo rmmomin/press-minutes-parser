@@ -78,4 +78,4 @@ press-minutes-parser/
 
 The analysis shows that "productivity" has been a consistent topic in FOMC discussions since 2012, while "immigration" was rarely mentioned until late 2023, with a significant increase in discussion frequency throughout 2024-2025.
 
-**Note:** The January 28, 2026 data point includes only the press conference transcript; the FOMC minutes have not yet been released.
+**Note:** The January 28, 2026 FOMC minutes are now included in this analysis.
