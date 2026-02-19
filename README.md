@@ -39,17 +39,25 @@ python src/extract_word_counts.py   # Step 2: Extract word counts
 python src/create_visualization.py  # Step 3: Generate charts
 ```
 
+Generate the quarterly productivity mentions vs labor productivity chart:
+
+```bash
+python src/plot_productivity_vs_labor_yoy.py
+```
+
 ## Output
 
 ### Data Files
 - `data/transcripts/` - FOMC press conference transcript PDFs (87 files)
-- `data/minutes/` - FOMC meeting minutes PDFs (85 files)
+- `data/minutes/` - FOMC meeting minutes PDFs (86 files)
 - `data/word_counts.csv` - Extracted word counts
+- `data/productivity_mentions_vs_labor_productivity_yoy_quarterly.csv` - Quarterly productivity mentions joined to labor productivity y/y %
 
 ### Visualizations
 - `output/fomc_word_trends.png` - Combined bar + line chart
 - `output/fomc_word_trends_bars.png` - Grouped stacked bar chart
 - `output/fomc_word_trends_lines.png` - Trend lines chart
+- `output/productivity_mentions_vs_labor_productivity_yoy_quarterly.png` - Quarterly productivity mentions vs labor productivity y/y %
 
 ## Data Source
 
@@ -65,17 +73,24 @@ press-minutes-parser/
 ├── src/
 │   ├── download_documents.py
 │   ├── extract_word_counts.py
-│   └── create_visualization.py
+│   ├── create_visualization.py
+│   └── plot_productivity_vs_labor_yoy.py
 ├── data/
 │   ├── transcripts/         # Downloaded PDFs
 │   ├── minutes/             # Downloaded PDFs
-│   └── word_counts.csv      # Analysis results
+│   ├── word_counts.csv      # Analysis results
+│   └── productivity_mentions_vs_labor_productivity_yoy_quarterly.csv
 └── output/
-    └── *.png                # Generated charts
+    ├── fomc_word_trends*.png
+    └── productivity_mentions_vs_labor_productivity_yoy_quarterly.png
 ```
 
 ## Key Findings
 
-The analysis shows that "productivity" has been a consistent topic in FOMC discussions since 2012, while "immigration" was rarely mentioned until late 2023, with a significant increase in discussion frequency throughout 2024-2025.
-
-**Note:** The January 28, 2026 FOMC minutes are now included in this analysis.
+- Coverage includes 87 FOMC meetings from `2012-01-25` through `2026-01-28`, including the January 28, 2026 minutes.
+- Total mentions across all meetings:
+  - `productivity`: `301` (`173` in press conferences, `128` in minutes)
+  - `immigration`: `95` (`43` in press conferences, `52` in minutes)
+- Productivity mentions remain persistent over the full sample, with the highest quarterly total in `2025-Q4` (`20` mentions).
+- `2026-Q1` currently shows `14` productivity mentions (from the January 28, 2026 meeting).
+- In the quarterly FRED comparison chart, labor productivity y/y data is available through `2025-Q3` (`1.9198%`); `2025-Q4` and `2026-Q1` mention bars are shown with missing y/y values until FRED publishes those quarters.
