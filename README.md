@@ -69,6 +69,12 @@ Generate the FOMC minutes and statement length column charts:
 python src/plot_document_lengths.py
 ```
 
+Generate the stacked AI / artificial intelligence mention chart:
+
+```bash
+python src/plot_ai_mentions.py
+```
+
 ## Output
 
 ### Data Files
@@ -77,6 +83,7 @@ python src/plot_document_lengths.py
 - `data/minutes/` - FOMC meeting minutes PDFs (116 files)
 - `data/word_counts.csv` - Extracted word counts
 - `data/document_lengths.csv` - FOMC minutes and statement lengths by meeting (116 minutes rows, 117 statement rows)
+- `data/ai_mentions.csv` - AI / artificial intelligence references by meeting and document type
 - `data/productivity_mentions_vs_labor_productivity_yoy_quarterly.csv` - Quarterly productivity mentions joined to labor productivity y/y %
 
 ### Visualizations
@@ -85,6 +92,7 @@ python src/plot_document_lengths.py
 - `output/fomc_word_trends_lines.png` - Trend lines chart
 - `output/fomc_minutes_lengths.png` - Column chart of FOMC minutes length by meeting
 - `output/fomc_statement_lengths.png` - Column chart of FOMC statement length by meeting
+- `output/fomc_ai_mentions_stacked.png` - Stacked column chart of AI / artificial intelligence references
 - `output/productivity_mentions_vs_labor_productivity_yoy_quarterly.png` - Quarterly productivity mentions vs labor productivity y/y %
 
 ## Data Source
@@ -102,6 +110,7 @@ press-minutes-parser/
 │   ├── download_documents.py
 │   ├── extract_word_counts.py
 │   ├── create_visualization.py
+│   ├── plot_ai_mentions.py
 │   ├── plot_document_lengths.py
 │   └── plot_productivity_vs_labor_yoy.py
 ├── data/
@@ -110,10 +119,12 @@ press-minutes-parser/
 │   ├── minutes/             # Downloaded PDFs
 │   ├── word_counts.csv      # Analysis results
 │   ├── document_lengths.csv # Document length results
+│   ├── ai_mentions.csv      # AI mention results
 │   └── productivity_mentions_vs_labor_productivity_yoy_quarterly.csv
 └── output/
     ├── fomc_word_trends*.png
     ├── fomc_*_lengths.png
+    ├── fomc_ai_mentions_stacked.png
     └── productivity_mentions_vs_labor_productivity_yoy_quarterly.png
 ```
 
