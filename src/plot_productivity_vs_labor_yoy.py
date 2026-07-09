@@ -2,7 +2,7 @@
 """
 Download labor productivity from FRED, compute year-over-year percent change,
 and plot it against quarterly total FOMC productivity mentions
-(minutes + press conference).
+(statements + minutes + press conferences when present).
 """
 
 import csv
@@ -174,7 +174,7 @@ def write_combined_data(output_path, combined_data):
     """Write combined quarterly data to CSV."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", newline="") as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, lineterminator="\n")
         writer.writerow([
             "quarter",
             "quarter_end_date",

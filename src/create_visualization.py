@@ -24,8 +24,10 @@ OUTPUT_DIR = BASE_DIR / "output"
 def load_data():
     """Load and organize word count data from CSV."""
     data = defaultdict(lambda: {
+        'immigration_statement': 0,
         'immigration_transcript': 0,
         'immigration_minutes': 0,
+        'productivity_statement': 0,
         'productivity_transcript': 0,
         'productivity_minutes': 0,
     })
@@ -45,8 +47,10 @@ def load_data():
 
     return {
         'dates': sorted_dates,
+        'immigration_statement': [data[d]['immigration_statement'] for d in sorted_dates],
         'immigration_transcript': [data[d]['immigration_transcript'] for d in sorted_dates],
         'immigration_minutes': [data[d]['immigration_minutes'] for d in sorted_dates],
+        'productivity_statement': [data[d]['productivity_statement'] for d in sorted_dates],
         'productivity_transcript': [data[d]['productivity_transcript'] for d in sorted_dates],
         'productivity_minutes': [data[d]['productivity_minutes'] for d in sorted_dates],
         'latest_date': latest_date,
@@ -57,15 +61,19 @@ def load_data():
 def draw_bar_chart(ax, data):
     """Draw grouped stacked bar chart on given axes."""
     sorted_dates = data['dates']
+    immigration_statement = data['immigration_statement']
     immigration_transcript = data['immigration_transcript']
     immigration_minutes = data['immigration_minutes']
+    productivity_statement = data['productivity_statement']
     productivity_transcript = data['productivity_transcript']
     productivity_minutes = data['productivity_minutes']
 
     # Colors
     colors = {
+        'immigration_statement': '#8c6bb1',   # Purple
         'immigration_transcript': '#1f77b4',  # Dark blue
         'immigration_minutes': '#aec7e8',     # Light blue
+        'productivity_statement': '#2ca02c',  # Green
         'productivity_transcript': '#ff7f0e', # Dark orange
         'productivity_minutes': '#ffbb78',    # Light orange
     }
@@ -80,6 +88,11 @@ def draw_bar_chart(ax, data):
            color=colors['immigration_transcript'])
     ax.bar(x_imm, immigration_minutes, width, bottom=immigration_transcript,
            label='Immigration Minutes', color=colors['immigration_minutes'])
+    immigration_bottom = [
+        t + m for t, m in zip(immigration_transcript, immigration_minutes)
+    ]
+    ax.bar(x_imm, immigration_statement, width, bottom=immigration_bottom,
+           label='Immigration Statement', color=colors['immigration_statement'])
 
     # Productivity bars (right)
     x_prod = [i + width/2 for i in x]
@@ -87,6 +100,11 @@ def draw_bar_chart(ax, data):
            color=colors['productivity_transcript'])
     ax.bar(x_prod, productivity_minutes, width, bottom=productivity_transcript,
            label='Productivity Minutes', color=colors['productivity_minutes'])
+    productivity_bottom = [
+        t + m for t, m in zip(productivity_transcript, productivity_minutes)
+    ]
+    ax.bar(x_prod, productivity_statement, width, bottom=productivity_bottom,
+           label='Productivity Statement', color=colors['productivity_statement'])
 
     # Format
     date_labels = [d[:7] for d in sorted_dates]
@@ -106,8 +124,22 @@ def draw_line_chart(ax, data):
     sorted_dates = data['dates']
 
     # Calculate totals
-    immigration_total = [t + m for t, m in zip(data['immigration_transcript'], data['immigration_minutes'])]
-    productivity_total = [t + m for t, m in zip(data['productivity_transcript'], data['productivity_minutes'])]
+    immigration_total = [
+        s + t + m
+        for s, t, m in zip(
+            data['immigration_statement'],
+            data['immigration_transcript'],
+            data['immigration_minutes'],
+        )
+    ]
+    productivity_total = [
+        s + t + m
+        for s, t, m in zip(
+            data['productivity_statement'],
+            data['productivity_transcript'],
+            data['productivity_minutes'],
+        )
+    ]
 
     x = list(range(len(sorted_dates)))
 
@@ -205,8 +237,10 @@ def create_visualization():
     print("Data summary:")
     print(f"  Meeting dates: {len(data['dates'])}")
     print(f"  Date range: {data['dates'][0]} to {data['dates'][-1]}")
+    print(f"  Immigration Statement: {sum(data['immigration_statement'])}")
     print(f"  Immigration Transcript: {sum(data['immigration_transcript'])}")
     print(f"  Immigration Minutes: {sum(data['immigration_minutes'])}")
+    print(f"  Productivity Statement: {sum(data['productivity_statement'])}")
     print(f"  Productivity Transcript: {sum(data['productivity_transcript'])}")
     print(f"  Productivity Minutes: {sum(data['productivity_minutes'])}")
 

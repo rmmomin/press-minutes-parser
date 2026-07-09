@@ -1,6 +1,7 @@
 # PDF data files (can be re-downloaded)
 data/transcripts/*.pdf
 data/minutes/*.pdf
+data/statements/*.pdf
 
 # Python
 __pycache__/
